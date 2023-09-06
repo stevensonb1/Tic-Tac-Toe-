@@ -1,5 +1,4 @@
 import random
-import time
 import Winner as winner
 
 def get_random_user() -> str:
@@ -28,39 +27,21 @@ def validate_input(self) -> bool:
         print(error_message)
         return False
     elif self in game_slots:
-     
         print("That slot is already in use!") 
         return False
     else:
         return True
     
-def get_drawed_games() -> int: #new function
-    # Returns the amount of rounds that were draws
-    global winner_scores
-    global rounds_played
-    wins = 0
-    for i in range(len(winner_scores)): 
-        wins += 1
-    print(rounds_played, wins)
-    return wins - rounds_played
-
 def check_for_winner(self: str) -> ():
     # Checks to see if anyone has won or if a draw happens
     global game_over
     global winner_scores
     global rounds_played
 
-    board = []
-    count = 0
-
-    for i in range(3):
-        board.append([])
-        for n in range(3):
-            count = count + 1
-            if count in game_slots:
-                board[i].append(game_slots[count])
-            else:
-                board[i].append("_")
+    board = [
+        [game_slots.get(3 * i + j + 1, "_") for j in range(3)]
+        for i in range(3)
+    ]
 
     win_state = winner.is_winner(board, self)
     if win_state:
@@ -70,9 +51,7 @@ def check_for_winner(self: str) -> ():
         game_over = True
         print("Rounds played:", rounds_played)
         for k, v in winner_scores.items():
-            print(get_drawed_games()/rounds_played)
-            print(((get_drawed_games()/rounds_played)*100))
-            print("Wins for", f"'{k}'" + ":", v, "(WR: " + str(round(((v/rounds_played)*100+((get_drawed_games()/rounds_played)*100)/2), 1)) + "%)" if v > 0 else "(WR: 0%)")
+            print("Wins for", f"'{k}'" + ":", v)
         return
 
     if len(game_slots) == 9 and not game_over:
@@ -81,17 +60,12 @@ def check_for_winner(self: str) -> ():
         rounds_played += 1
         print("Rounds played:", rounds_played)
         for k, v in winner_scores.items():
-            print("Wins for", f"'{k}'" + ":", v, "(WR: " + str(round(((v/rounds_played)*100), 1)) + "%)" if v > 0 else "(WR: 0%)")
+            print("Wins for", f"'{k}'" + ":", v)
     
 def get_input(self: str):
     # Gets spot input of current user 
     spot = None
-    try:
-        spot = int(input(f'User "{self}" choose a spot between 1-9: '))
-    except:
-        print(error_message)
-        get_input(self)
-        return
+    spot = int(input(f'User "{self}" choose a spot between 1-9: '))
 
     if not validate_input(spot):
         get_input(self)
@@ -132,7 +106,7 @@ def handle_end_game_input() -> bool:
         game_slots = {}
     else:
         print(error_message)
-        handle_end_game_input()
+        return handle_end_game_input()
     return True
 
 # Integers
@@ -161,4 +135,3 @@ while True:
             break
             
     handle_user_state()
-    time.sleep(.5)
