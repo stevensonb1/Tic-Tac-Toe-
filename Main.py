@@ -134,4 +134,4 @@ while True:
         if not handle_end_game_input():
             break
             
-    handle_user_state()
+    handle_user_state() 
